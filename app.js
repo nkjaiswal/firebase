@@ -29,7 +29,7 @@ app.use(bodyParser.urlencoded({
 	extended: true
 }));
 
-app.listen(process.env.NODE_PORT || 3000, process.env.NODE_IP || 'localhost', function() {
+app.listen(process.env.NODE_PORT || 3011, process.env.NODE_IP || 'localhost', function() {
 	console.log(`Application worker ${process.pid} started...`);
 });
 
