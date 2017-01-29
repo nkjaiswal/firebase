@@ -65,7 +65,7 @@ app.configure(function() {
 
 
 
-app.listen(process.env.NODE_PORT || 3000, process.env.NODE_IP || 'localhost', function() {
+app.listen(3001, function() {
 	console.log(`Application worker ${process.pid} started...`);
 });
 
