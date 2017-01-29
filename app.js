@@ -10,6 +10,7 @@ const http			= require('http'),
 	  bodyParser = require('body-parser'),
 	  express = require('express'),
 	  app = express(),
+	  cors = require('cors'),
 	  
 	  fireadmin		= require("firebase-admin");
 
@@ -23,13 +24,48 @@ fireadmin.initializeApp({
 
 
 
-
-
 app.use(bodyParser.urlencoded({
 	extended: true
 }));
 
-app.listen(process.env.NODE_PORT || 3011, process.env.NODE_IP || 'localhost', function() {
+
+app.use(cors());
+
+/*
+app.use(function(req, res) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+
+});
+*/
+
+/*
+//CORS middleware
+var allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+    next();
+}
+
+//...
+app.configure(function() {
+    app.use(express.bodyParser());
+    app.use(express.cookieParser());
+    app.use(express.session({ secret: 'cool beans' }));
+    app.use(express.methodOverride());
+    app.use(allowCrossDomain);
+    app.use(app.router);
+    app.use(express.static(__dirname + '/public'));
+});
+*/
+
+
+
+app.listen(process.env.NODE_PORT || 3000, process.env.NODE_IP || 'localhost', function() {
 	console.log(`Application worker ${process.pid} started...`);
 });
 
@@ -145,6 +181,7 @@ app.post('/quotes', (req, res) => {
 
 app.post('/firebase', (req, res) => {
 	
+	
 	console.log("Got one Request");
 	var obj = Object.keys(req.body)[0].split("\":\"");
 	var userId = obj[1].split("\"");
@@ -154,11 +191,11 @@ app.post('/firebase', (req, res) => {
 		tokenId = tokenId[0].split("\"");
 		tokenId = tokenId[0];
 		
-	console.log(obj);
-	console.log("------------------------------");
-	console.log(userId);
-	console.log("------------------------------");
-	console.log(tokenId);
+	//console.log(obj);
+	//console.log("------------------------------");
+	//console.log(userId);
+	//console.log("------------------------------");
+	//console.log(tokenId);
 	//console.log(obj.toString());
 	
 	//res.writeHead(200, {'Content-Type': 'text/html'});
@@ -168,16 +205,16 @@ app.post('/firebase', (req, res) => {
 	fireadmin.auth().verifyIdToken(tokenId).then(function(decodedToken) {
 		var uid = decodedToken.uid;
 		if(uid === userId) {
-			res.writeHead(200, {'Content-Type': 'text/html'});
+			
 			res.end("Every Thing is Fine");
 		} else {
 		
-			res.writeHead(200, {'Content-Type': 'text/html'});
-			res.end("Some Thing Wrong");
+			//res.writeHead(200, {'Content-Type': 'text/html'});
+			res.end("User ID Mismatch");
 		}
 		
 	}).catch(function(error) {
-
+		console.log(error);
 	});
 	
 	

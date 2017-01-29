@@ -12,6 +12,7 @@
 	"firebase-admin": "latest",
 	"mongodb": "latest",
 	"express": "latest",
+	"cors": "latest",
 	"body-parser": "latest"
   },
   "author": "Ionut-Cristian Florescu <ionut.florescu@gmail.com>",
