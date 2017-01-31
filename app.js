@@ -69,9 +69,25 @@ app.listen(3001, function() {
 	console.log(`Application worker ${process.pid} started...`);
 });
 
+
+app.get('/log', function(req, res) {
+	fs.readFile('./output.txt', function(err, data) {
+			if (err) {
+				res.writeHead(404);
+				res.end('Not found');
+			} else {
+				
+				res.setHeader('Content-Type', 'text/plain');
+				
+				res.end(data);
+			}
+		});
+});
+
 app.get('/', function(req, res) {
 
 	let url = req.url;
+	console.log(url);
 	if (url == '/') {
 		url += 'index.html';
 	}
@@ -83,7 +99,21 @@ app.get('/', function(req, res) {
 		res.setHeader('Content-Type', 'application/json');
 		res.setHeader('Cache-Control', 'no-cache, no-store');
 		res.end(JSON.stringify(sysInfo[url.slice(6)]()));
-	} else {
+	} else if(url == '/showlog'){
+		fs.readFile('./output.txt', function(err, data) {
+			if (err) {
+				res.writeHead(404);
+				res.end('Not found');
+			} else {
+				let ext = path.extname(url).slice(1);
+				res.setHeader('Content-Type', contentTypes[ext]);
+				if (ext === 'html') {
+					res.setHeader('Cache-Control', 'no-cache, no-store');
+				}
+				res.end(data);
+			}
+		});
+	}else {
 		fs.readFile('./static' + url, function(err, data) {
 			if (err) {
 				res.writeHead(404);
